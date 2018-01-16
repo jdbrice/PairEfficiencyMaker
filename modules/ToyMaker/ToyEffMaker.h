@@ -384,6 +384,12 @@ public:
 		else 
 			makeWithParentKinematics();
 
+		if ( 0 == config.getInt( "jobIndex" ) || -1 == config.getInt( "jobIndex" ) ){
+			TNamed config_str( "config", config.toXml() );
+			config_str.Write();
+		}
+
+
 	} // make
 
 };
