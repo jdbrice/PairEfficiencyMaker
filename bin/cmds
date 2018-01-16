@@ -1,0 +1,13 @@
+
+# submit to condor
+csub.sh toy.app 'config/eff.xml --jobIndex=$(Process)' 120
+
+
+# hadd the condor jobs together
+hadd -f all.root eff-table_*.root
+
+#check jobs
+condor_q -nobatch
+
+#watch condor and update every 5secs
+watch -n 5 condor_q

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<Task name="ToyEffMaker" type="ToyEffMaker" config="" nodePath="ToyEffMaker"  />
+	<mod></mod>
+	
+	<N>500000</N>
+
+	<dist use="pair">
+		<TF1 name="pairMass" formula="1 * ( x >= 0.210 && x <= 4 ) " min="0.210" max="4" />
+
+		<!-- in dist:use="pair" then these define the parent kinematics -->
+		<!-- Otherwise they define the daughter kinematics -->
+		<TF1 name="Pt" formula=" 1 * ( x >= 0.0 && x <= 10 ) " min="0.0" max="10" />
+		<TF1 name="Phi" formula=" 1 * ( x >= -TMath::Pi() && x <= TMath::Pi() )" min="-3.5" max="3.5" />
+		<TF1 name="Eta" formula=" 1 * ( x > -10.5 && x < 10.5 )" min="-0.5" max="0.5" />
+	</dist>
+
+	<p>
+		<daughter>
+			<Range name="pt" min="1.1" max="100000" />
+			<Range name="eta" min="-0.5" max="0.5" />
+		</daughter>
+	</p>
+
+	<ToyEffMaker>
+		<input>
+			<TFile url="test.root" />
+		</input>
+
+		<output>
+			<TFile url="eff-table-{jobIndex}.root" />
+		</output>
+
+		<histograms>
+			<!-- Pair pt vs. mass plots -->
+			<Histo name="hgen" xtitle="M_{#mu#mu} (GeV/c^{2})" ytitle="p_{T}^{#mu#mu} (GeV/c)" bins_x="bins.mass" bins_y="bins.pt" />
+			<Histo name="hmc" xtitle="M_{#mu#mu} (GeV/c^{2})" ytitle="p_{T}^{#mu#mu} (GeV/c)" bins_x="bins.mass" bins_y="bins.pt" />
+			<Histo name="hrc" xtitle="M_{#mu#mu} (GeV/c^{2})" ytitle="p_{T}^{#mu#mu} (GeV/c)" bins_x="bins.mass" bins_y="bins.pt" />
+			<Histo name="hmtd" xtitle="M_{#mu#mu} (GeV/c^{2})" ytitle="p_{T}^{#mu#mu} (GeV/c)" bins_x="bins.mass" bins_y="bins.pt" />
+
+			<!-- Daughter kinematics at MC level (no weighting) -->
+			<Histo name="mc_pt" bins_x="bins.pt" title="MC;p_{T} (GeV/c); dN/dp_{T} (GeV/c)^{-1}" />
+			<Histo name="mc_eta" bins_x="bins.eta" title="MC; #eta; dN/d#eta" />
+			<Histo name="mc_phi" bins_x="bins.phi" title="MC; #phi; dN/d#phi" />
+			<Histo name="mc_y" bins_x="bins.eta" title="MC; y; dN/dy"/>
+
+			<!-- Daughter kinematics with RC efficiency weights -->
+			<Histo name="rc_pt_w" bins_x="bins.pt" title="RC weights;p_{T} (GeV/c); dN/dp_{T} (GeV/c)^{-1}" />
+			<Histo name="rc_eta_w" bins_x="bins.eta" title="RC weights; #eta; dN/d#eta" />
+			<Histo name="rc_phi_w" bins_x="bins.phi" title="RC weights; #phi; dN/d#phi" />
+
+			<!-- Daughter kinematics with MTD weights -->
+			<Histo name="mtd_pt_w" bins_x="bins.pt" title="MTD weights;p_{T} (GeV/c); dN/dp_{T} (GeV/c)^{-1}" />
+			<Histo name="mtd_eta_w" bins_x="bins.eta" title="MTD weights; #eta; dN/d#eta" />
+			<Histo name="mtd_phi_w" bins_x="bins.phi" title="MTD weights; #phi; dN/d#phi" />
+
+			<!-- Parent Kinematics at MC level -->
+			<Histo name="pt" bins_x="bins.pt" title="Parent; p_{T} (GeV/c); dN/dp_{T} (GeV/c)^{-1}" />
+			<Histo name="eta" bins_x="bins.eta" title="Parent; #eta; dN/d#eta" />
+			<Histo name="phi" bins_x="bins.phi" title="Parent; #phi; dN/d#phi" />
+			<Histo name="rap" bins_x="bins.eta" title="Parent; y; dN/dy" />
+
+		</histograms>
+
+		<XmlHistogram name="mc_5" url="/home/jdb12/work/dimuonAna/Plots/export/embedding/eff.root" />
+		<XmlHistogram name="mc_6" url="/home/jdb12/work/dimuonAna/Plots/export/embedding/eff.root" />
+		<XmlHistogram name="rc_5" url="/home/jdb12/work/dimuonAna/Plots/export/embedding/eff.root" />
+		<XmlHistogram name="rc_6" url="/home/jdb12/work/dimuonAna/Plots/export/embedding/eff.root" />
+
+		<XmlHistogram name="pos_eff" url="/home/jdb12/work/dimuonAna/Plots/export/MtdSimGun/rebinned_eff_tables.root" />
+		<XmlHistogram name="neg_eff" url="/home/jdb12/work/dimuonAna/Plots/export/MtdSimGun/rebinned_eff_tables.root" />
+
+	</ToyEffMaker>
+
+
+	<bins>
+		<mass width="0.01" min="0" max="4" />
+		<pt width="0.1" min="0" max="10" /> 
+		<eta width="0.05" min="-0.8" max="0.8" />
+		<phi width="0.05" min="-3.8" max="3.8" />
+		<w width="0.01" min="0" max="1.5" />
+	</bins>
+</config>
