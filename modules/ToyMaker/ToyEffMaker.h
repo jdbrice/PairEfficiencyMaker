@@ -300,6 +300,11 @@ public:
 			}
 
 			book->fill( "hgen", lv.M(), lv.Pt() );
+			// fill parent kinematic histograms
+			book->fill( "gen_pt", lv.Pt() );
+			book->fill( "gen_eta", lv.PseudoRapidity() );
+			book->fill( "gen_rap", lv.Rapidity() );
+			book->fill( "gen_phi", lv.Phi() );
 			
 
 			// Perform the 2-body decay

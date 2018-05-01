@@ -3,7 +3,7 @@
 	<Task name="ToyEffMaker" type="ToyEffMaker" config="" nodePath="ToyEffMaker"  />
 	<mod></mod>
 	
-	<N>500000</N>
+	<N>500</N>
 
 	<dist use="pair">
 		<TF1 name="pairMass" formula="1 * ( x >= 0.210 && x <= 4 ) " min="0.210" max="4" />
@@ -12,7 +12,7 @@
 		<!-- Otherwise they define the daughter kinematics -->
 		<TF1 name="Pt" formula=" 1 * ( x >= 0.0 && x <= 10 ) " min="0.0" max="10" />
 		<TF1 name="Phi" formula=" 1 * ( x >= -TMath::Pi() && x <= TMath::Pi() )" min="-3.5" max="3.5" />
-		<TF1 name="Eta" formula=" 1 * ( x > -10.5 && x < 10.5 )" min="-0.5" max="0.5" />
+		<TF1 name="Eta" formula=" 1 * ( x > -2.5 && x < 2.5 )" min="-0.5" max="0.5" />
 	</dist>
 
 	<p>
@@ -28,7 +28,7 @@
 		</input>
 
 		<output>
-			<TFile url="eff-table-{jobIndex}.root" />
+			<TFile url="test-eff-table-{jobIndex}.root" />
 		</output>
 
 		<histograms>
@@ -53,6 +53,12 @@
 			<Histo name="mtd_pt_w" bins_x="bins.pt" title="MTD weights;p_{T} (GeV/c); dN/dp_{T} (GeV/c)^{-1}" />
 			<Histo name="mtd_eta_w" bins_x="bins.eta" title="MTD weights; #eta; dN/d#eta" />
 			<Histo name="mtd_phi_w" bins_x="bins.phi" title="MTD weights; #phi; dN/d#phi" />
+
+			<!-- Parent Kinematics at GEN level -->
+			<Histo name="gen_pt" bins_x="bins.pt" title="Parent; p_{T} (GeV/c); dN/dp_{T} (GeV/c)^{-1}" />
+			<Histo name="gen_eta" bins_x="bins.eta" title="Parent; #eta; dN/d#eta" />
+			<Histo name="gen_phi" bins_x="bins.phi" title="Parent; #phi; dN/d#phi" />
+			<Histo name="gen_rap" bins_x="bins.eta" title="Parent; y; dN/dy" />
 
 			<!-- Parent Kinematics at MC level -->
 			<Histo name="pt" bins_x="bins.pt" title="Parent; p_{T} (GeV/c); dN/dp_{T} (GeV/c)^{-1}" />
