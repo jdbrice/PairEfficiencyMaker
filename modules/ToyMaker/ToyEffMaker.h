@@ -23,9 +23,6 @@ protected:
 
 	map< string, XmlHistogram> xh;
 	map< string, TH3*> h3;
-	// XmlHistogram xhmcTPC, xhrcTPC;
-	// TH3 * hmcTPC = nullptr;
-	// TH3 * hrcTPC = nullptr;
 
 public:
 
@@ -42,7 +39,9 @@ public:
 		xfPhi.set( config, config.q( "dist.TF1{name==Phi}" ) );
 
 		LOG_F( INFO, "pairPt distribution @ %s", config.q( "dist.TF1{name==pairPt}" ).c_str() );
-		xfpPt.set( config, config.q( "dist.TF1{name==pairPt}" ) );
+		if ( config.exists( config.q( "dist.TF1{name==pairPt}" ) ) )
+			xfpPt.set( config, config.q( "dist.TF1{name==pairPt}" ) );
+		
 		LOG_F( INFO, "pairMass distribution @ %s", config.q( "dist.TF1{name==pairMass}" ).c_str() );
 		xfpM.set( config, config.q( "dist.TF1{name==pairMass}" ) );
 
@@ -93,8 +92,6 @@ public:
 		for ( string n : cutNames ){
 			LOG_F( INFO, "DaughterCut [ %s ] = %s", n.c_str(), dcuts[ n ]->toString().c_str()  );
 		}
-
-		
 
 	}
 
@@ -222,8 +219,6 @@ public:
 		// daughter2;
 	}
 
-
-
 	virtual void makeWithDaughterKinematics(){
 		LOG_SCOPE_FUNCTION(INFO);
 		LOG_F( INFO, "Generating N=%lu Pairs", N*N );
@@ -282,13 +277,13 @@ public:
 		LOG_SCOPE_FUNCTION(INFO);
 		TLorentzVector lv1, lv2, lv;
 		size_t nPass = 0;
-
+		size_t nAttempt = 0;
 
 		while ( nPass < N ){
-			
+			nAttempt++;
 			// Sample the parent's kinematics
-			double m = xfpM.getTF1()->GetRandom();
-			double pt = xfPt.getTF1()->GetRandom();
+			double m   = xfpM.getTF1()->GetRandom();
+			double pt  = xfPt.getTF1()->GetRandom();
 			double eta = xfEta.getTF1()->GetRandom();
 			double phi = xfPhi.getTF1()->GetRandom();
 			lv.SetPtEtaPhiM( pt, eta, phi, m );
@@ -347,21 +342,32 @@ public:
 			book->fill( "mc_eta", lv2.Rapidity() );
 			book->fill( "mc_phi", lv2.Phi() );
 
-			book->fill( "rc_pt_w", lv1.Pt(), e1 );
-			book->fill( "rc_eta_w", lv1.PseudoRapidity(), e1 );
-			book->fill( "rc_phi_w", lv1.Phi(), e1 );
+			//  RC weights only
+			book->fill( "rc_pt_w"  , lv1.Pt()             , e1 );
+			book->fill( "rc_eta_w" , lv1.PseudoRapidity() , e1 );
+			book->fill( "rc_phi_w" , lv1.Phi()            , e1 );
 
-			book->fill( "rc_pt_w", lv2.Pt(), e2 );
-			book->fill( "rc_eta_w", lv2.PseudoRapidity(), e2 );
-			book->fill( "rc_phi_w", lv2.Phi(), e2 );
+			book->fill( "rc_pt_w"  , lv2.Pt()             , e2 );
+			book->fill( "rc_eta_w" , lv2.PseudoRapidity() , e2 );
+			book->fill( "rc_phi_w" , lv2.Phi()            , e2 );
 
-			book->fill( "mtd_pt_w", lv1.Pt(), emtd1 );
-			book->fill( "mtd_eta_w", lv1.PseudoRapidity(), emtd1 );
-			book->fill( "mtd_phi_w", lv1.Phi(), emtd1 );
+			// MTD weights only
+			book->fill( "mtd_pt_w"  , lv1.Pt()             , emtd1 );
+			book->fill( "mtd_eta_w" , lv1.PseudoRapidity() , emtd1 );
+			book->fill( "mtd_phi_w" , lv1.Phi()            , emtd1 );
 
-			book->fill( "mtd_pt_w", lv2.Pt(), emtd2 );
-			book->fill( "mtd_eta_w", lv2.PseudoRapidity(), emtd2 );
-			book->fill( "mtd_phi_w", lv2.Phi(), emtd2 );
+			book->fill( "mtd_pt_w"  , lv2.Pt()             , emtd2 );
+			book->fill( "mtd_eta_w" , lv2.PseudoRapidity() , emtd2 );
+			book->fill( "mtd_phi_w" , lv2.Phi()            , emtd2 );
+
+			// RC and MTD weights
+			book->fill( "rcmtd_pt_w"  , lv1.Pt()             , emtd1 * e1 );
+			book->fill( "rcmtd_eta_w" , lv1.PseudoRapidity() , emtd1 * e1 );
+			book->fill( "rcmtd_phi_w" , lv1.Phi()            , emtd1 * e1 );
+
+			book->fill( "rcmtd_pt_w"  , lv2.Pt()             , emtd2 * e2 );
+			book->fill( "rcmtd_eta_w" , lv2.PseudoRapidity() , emtd2 * e2 );
+			book->fill( "rcmtd_phi_w" , lv2.Phi()            , emtd2 * e2 );
 
 
 			double eff = 1.0;
@@ -375,7 +381,7 @@ public:
 
 		} // while nPass < N
 
-		LOG_F( INFO, "%lu / %lu = %f", nPass, N, nPass / (float)(N) );
+		LOG_F( INFO, "%lu / %lu = %f", nPass, nAttempt, nPass / (float)(nAttempt) );
 	}
 
 	virtual void make(){
@@ -393,8 +399,6 @@ public:
 			TNamed config_str( "config", config.toXml() );
 			config_str.Write();
 		}
-
-
 	} // make
 
 };

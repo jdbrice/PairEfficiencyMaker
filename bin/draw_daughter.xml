@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<Data name="d" url="test-eff-table-0.root" />
+
+	<TCanvas w="1900" h="1200" />
+	<Margins>0.03, 0.03, 0.12, 0.12</Margins>
+
+	<Loop var="kv" states="pt, eta, phi" >
+		<Plot>
+			<Histo name="mc_{kv}" draw="hp" min="0" logy="0" optstat="0" title="" x-title="{kv}" y-title="dN/d{kv}"/>
+			<Histo name="rc_{kv}_w" draw="same hp" />
+			<Histo name="mtd_{kv}_w" draw="same hp" />
+			<Histo name="rcmtd_{kv}_w" draw="same hp" />
+
+			<Export url="daughter_{kv}.pdf" />
+		</Plot>
+	</Loop>
+	
+</config>

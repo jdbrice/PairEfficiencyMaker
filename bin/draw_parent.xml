@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<Data name="d" url="test-eff-table-0.root" />
+
+	<TCanvas w="1900" h="1200" />
+	<Margins>0.03, 0.03, 0.12, 0.12</Margins>
+
+	<Transform>
+		<Projection axis="x" save_as="gen_mass" name="hgen" />
+		<Projection axis="x" save_as="mc_mass" name="hmc" />
+		<Projection axis="x" save_as="rc_mass" name="hrc" />
+		<Projection axis="x" save_as="mtd_mass" name="hmtd" />
+	</Transform>
+
+	<Loop var="num" states="mc, rc, mtd">
+		<Loop var="den" states="gen, mc" >
+			<Divide save_as="{num}_over_{den}_mass" nameA="{num}_mass" nameB="{den}_mass" />
+			<Divide save_as="{num}_over_{den}" nameA="h{num}" nameB="h{den}" />
+		</Loop>
+	</Loop>
+
+
+	<Plot>
+		<Histo name="gen_mass" draw="hp" min="0" logy="0" optstat="0" title="" x-title="M_{#mu#mu} (GeV/c)^{2}" y-title="dN/dM (GeV/c^{2})^{-1}" lc="#F00" line-style="2"/>
+		<Histo name="mc_mass" draw="same hp" lc="#F00" />
+		<Histo name="rc_mass" draw="same hp" lc="#00F" />
+		<Histo name="mtd_mass" draw="same hp" lc="#000" />
+
+		<Export url="parent_mass.pdf" />
+	</Plot>
+
+	<Plot>
+		<Axes lsx="0, 4, 1" lsy="0, 1, 10" logy="0" />
+		<!-- <Histo name="mc_over_gen" draw="same h" lc="#F00" /> -->
+		<Histo name="rc_over_mc_mass" draw="same h" lc="#00F" />
+		<Histo name="mtd_over_mc_mass" draw="same h" lc="#000" />
+		<Export url="parent_mass_eff.pdf" />
+	</Plot>
+
+
+	<Plot>
+		<Margins>0.03, 0.13, 0.12, 0.12</Margins>
+		<Histo name="rc_over_mc" draw="colz" logz="1"/>
+		<Export url="parent_mass_eff_rc.pdf" />
+	</Plot>
+
+	<Plot>
+		<Histo name="mtd_over_mc" draw="colz" logz="1"/>
+		<Export url="parent_mass_eff_mtd.pdf" />
+	</Plot>
+	
+</config>
