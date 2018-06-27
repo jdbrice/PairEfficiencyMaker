@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-	<Data name="d" url="test-eff-table-0.root" />
+	<Data name="d" url="eff-table-jpsi.root" />
 
 	<TCanvas w="1900" h="1200" />
 	<Margins>0.03, 0.03, 0.12, 0.12</Margins>
+
+
 
 	<Transform>
 		<Projection axis="x" save_as="gen_mass" name="hgen" />
@@ -12,9 +14,18 @@
 		<Projection axis="x" save_as="mtd_mass" name="hmtd" />
 	</Transform>
 
+
+	<Transform>
+		<Projection axis="y" save_as="gen_pt" name="hgen" />
+		<Projection axis="y" save_as="mc_pt" name="hmc" />
+		<Projection axis="y" save_as="rc_pt" name="hrc" />
+		<Projection axis="y" save_as="mtd_pt" name="hmtd" />
+	</Transform>
+
 	<Loop var="num" states="mc, rc, mtd">
 		<Loop var="den" states="gen, mc" >
 			<Divide save_as="{num}_over_{den}_mass" nameA="{num}_mass" nameB="{den}_mass" />
+			<Divide save_as="{num}_over_{den}_pt" nameA="{num}_pt" nameB="{den}_pt" />
 			<Divide save_as="{num}_over_{den}" nameA="h{num}" nameB="h{den}" />
 		</Loop>
 	</Loop>
@@ -35,6 +46,15 @@
 		<Histo name="rc_over_mc_mass" draw="same h" lc="#00F" />
 		<Histo name="mtd_over_mc_mass" draw="same h" lc="#000" />
 		<Export url="parent_mass_eff.pdf" />
+	</Plot>
+
+
+	<Plot>
+		<Axes lsx="0, 4, 1" lsy="0, 1, 10" logy="0" />
+		<!-- <Histo name="mc_over_gen" draw="same h" lc="#F00" /> -->
+		<Histo name="rc_over_mc_pt" draw="same h" lc="#00F" />
+		<Histo name="mtd_over_mc_pt" draw="same h" lc="#000" />
+		<Export url="parent_pt_eff.pdf" />
 	</Plot>
 
 

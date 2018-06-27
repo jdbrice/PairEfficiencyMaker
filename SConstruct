@@ -24,7 +24,7 @@ ROOTCFLAGS      = subprocess.check_output( ['root-config',  '--cflags'] ).rstrip
 ROOTLIBS        = subprocess.check_output( ["root-config",  "--libs"] )
 ROOT_SYS        = os.environ.get( "ROOTSYS", "" )
 
-env.Append(CPPPATH   = [ ROOT_SYS + "/include/", JDB_LIB + "/include", "modules/StarClassLibrary" ])
+env.Append(CPPPATH   = [ ROOT_SYS + "/include/", JDB_LIB + "/include", "modules/lib" ])
 env.Append(CXXFLAGS  = ROOTCFLAGS )
 env.Append(LINKFLAGS = ROOTCFLAGS )
 
@@ -36,4 +36,4 @@ env[ "_LIBFLAGS" ] = env[ "_LIBFLAGS" ] + " " + ROOTLIBS + " "
 if "Darwin" in platform.platform() :
 	env[ "LINKFLAGS" ].remove( "-pthread" )
 
-env.Program( target="bin/toy.app", source=[ "Engine.cpp"] )
+env.Program( target="bin/toy.app", source=[ "Engine.cpp", Glob("modules/lib/*.cpp")] )

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<Task name="JPsiEfficiency" type="JPsiEfficiency" config="" nodePath="JPsiEfficiency"  />
+	<sys>pp</sys>
+	<mod></mod>
+	
+	<N>5000000</N>
+
+	<dist>
+		<TF1 name="Phi" formula=" 1 * ( x >= -TMath::Pi() && x <= TMath::Pi() )" min="-3.5" max="3.5" />
+		<TF1 name="ptResolution" formula="([0]*x + [1]*x*x)" p0="8.674e-3" p1="2.14e-3" min="0.0" max="20.0" />
+	</dist>
+
+	<p>
+		<tbwMakeHisto>false</tbwMakeHisto>
+		<daughter>
+			<Range name="pt" min="1.1" max="100000" />
+			<Range name="eta" min="-0.5" max="0.5" />
+		</daughter>
+
+		<MtdResEff url="Run15ResponseEffViaPtTemplate.root" /> 
+	</p>
+
+	<JPsiEfficiency>
+		<input>
+			<TFile url="test.root" />
+		</input>
+
+		<output>
+			<TFile url="eff-table-jpsi.root" />
+		</output>
+
+		<histograms>
+			<!-- Pair pt vs. mass plots -->
+			<Histo name="hgen" xtitle="M_{#mu#mu} (GeV/c^{2})" ytitle="p_{T}^{#mu#mu} (GeV/c)" bins_x="bins.mass" bins_y="bins.pt" />
+			<Histo name="hmc" xtitle="M_{#mu#mu} (GeV/c^{2})" ytitle="p_{T}^{#mu#mu} (GeV/c)" bins_x="bins.mass" bins_y="bins.pt" />
+			<Histo name="hrc" xtitle="M_{#mu#mu} (GeV/c^{2})" ytitle="p_{T}^{#mu#mu} (GeV/c)" bins_x="bins.mass" bins_y="bins.pt" />
+			<Histo name="hmtd" xtitle="M_{#mu#mu} (GeV/c^{2})" ytitle="p_{T}^{#mu#mu} (GeV/c)" bins_x="bins.mass" bins_y="bins.pt" />
+
+			<!-- Daughter kinematics at MC level (no weighting) -->
+			<Histo name="dmc_pt" bins_x="bins.pt" title="MC;p_{T} (GeV/c); dN/dp_{T} (GeV/c)^{-1}" lc="#F00" />
+			<Histo name="dmc_eta" bins_x="bins.eta" title="MC; #eta; dN/d#eta" lc="#F00" />
+			<Histo name="dmc_phi" bins_x="bins.phi" title="MC; #phi; dN/d#phi" lc="#F00" />
+			<Histo name="dmc_y" bins_x="bins.eta" title="MC; y; dN/dy"lc="#F00" />
+
+			<!-- Daughter kinematics with RC efficiency weights -->
+			<Histo name="drc_pt_w" bins_x="bins.pt" title="RC weights;p_{T} (GeV/c); dN/dp_{T} (GeV/c)^{-1}" lc="#00F" />
+			<Histo name="drc_eta_w" bins_x="bins.eta" title="RC weights; #eta; dN/d#eta" lc="#00F" />
+			<Histo name="drc_phi_w" bins_x="bins.phi" title="RC weights; #phi; dN/d#phi" lc="#00F" />
+
+			<!-- Daughter kinematics with MTD weights -->
+			<Histo name="dmtd_pt_w" bins_x="bins.pt" title="MTD weights;p_{T} (GeV/c); dN/dp_{T} (GeV/c)^{-1}" lc="#00F" line-style="2" />
+			<Histo name="dmtd_eta_w" bins_x="bins.eta" title="MTD weights; #eta; dN/d#eta" lc="#00F" line-style="2" />
+			<Histo name="dmtd_phi_w" bins_x="bins.phi" title="MTD weights; #phi; dN/d#phi" lc="#00F" line-style="2" />
+
+			<!-- Daughter kinematics with RC and MTD weights -->
+			<Histo name="drcmtd_pt_w" bins_x="bins.pt" title="MTD weights;p_{T} (GeV/c); dN/dp_{T} (GeV/c)^{-1}" lc="#000" />
+			<Histo name="drcmtd_eta_w" bins_x="bins.eta" title="MTD weights; #eta; dN/d#eta" lc="#000" />
+			<Histo name="drcmtd_phi_w" bins_x="bins.phi" title="MTD weights; #phi; dN/d#phi" lc="#000" />
+
+			<!-- Parent Kinematics at GEN level -->
+			<Histo name="gen_pt" bins_x="bins.pt" title="Parent; p_{T} (GeV/c); dN/dp_{T} (GeV/c)^{-1}" />
+			<Histo name="gen_eta" bins_x="bins.eta" title="Parent; #eta; dN/d#eta" />
+			<Histo name="gen_phi" bins_x="bins.phi" title="Parent; #phi; dN/d#phi" />
+			<Histo name="gen_rap" bins_x="bins.eta" title="Parent; y; dN/dy" />
+
+			<!-- Parent Kinematics at MC level -->
+			<Histo name="mc_pt" bins_x="bins.pt" title="Parent; p_{T} (GeV/c); dN/dp_{T} (GeV/c)^{-1}" />
+			<Histo name="mc_eta" bins_x="bins.eta" title="Parent; #eta; dN/d#eta" />
+			<Histo name="mc_phi" bins_x="bins.phi" title="Parent; #phi; dN/d#phi" />
+			<Histo name="mc_rap" bins_x="bins.eta" title="Parent; y; dN/dy" />
+
+			<Histo name="rc_pt" bins_x="bins.pt" title="Parent; p_{T} (GeV/c); dN/dp_{T} (GeV/c)^{-1}" />
+			<Histo name="rc_eta" bins_x="bins.eta" title="Parent; #eta; dN/d#eta" />
+			<Histo name="rc_phi" bins_x="bins.phi" title="Parent; #phi; dN/d#phi" />
+			<Histo name="rc_rap" bins_x="bins.eta" title="Parent; y; dN/dy" />
+
+			<Histo name="mtd_pt" bins_x="bins.pt" title="Parent; p_{T} (GeV/c); dN/dp_{T} (GeV/c)^{-1}" />
+			<Histo name="mtd_eta" bins_x="bins.eta" title="Parent; #eta; dN/d#eta" />
+			<Histo name="mtd_phi" bins_x="bins.phi" title="Parent; #phi; dN/d#phi" />
+			<Histo name="mtd_rap" bins_x="bins.eta" title="Parent; y; dN/dy" />
+
+			<Histo name="mtdr_pt" bins_x="bins.pt" title="Parent; p_{T} (GeV/c); dN/dp_{T} (GeV/c)^{-1}" />
+			<Histo name="mtdr_eta" bins_x="bins.eta" title="Parent; #eta; dN/d#eta" />
+			<Histo name="mtdr_phi" bins_x="bins.phi" title="Parent; #phi; dN/d#phi" />
+			<Histo name="mtdr_rap" bins_x="bins.eta" title="Parent; y; dN/dy" />
+
+		</histograms>
+
+		<XmlHistogram name="TBW" url="JPsi_TBW.root" />
+
+		<XmlHistogram name="mc_5" url="{DIMUON_ROOT}/data/Efficiency/eff-{sys}.root" />
+		<XmlHistogram name="mc_6" url="{DIMUON_ROOT}/data/Efficiency/eff-{sys}.root" />
+		<XmlHistogram name="rc_5" url="{DIMUON_ROOT}/data/Efficiency/eff-{sys}.root" />
+		<XmlHistogram name="rc_6" url="{DIMUON_ROOT}/data/Efficiency/eff-{sys}.root" />
+
+		<XmlHistogram name="pos_eff" url="{DIMUON_ROOT}/data/Efficiency/rebinned-eff-tables-{sys}.root" />
+		<XmlHistogram name="neg_eff" url="{DIMUON_ROOT}/data/Efficiency/rebinned-eff-tables-{sys}.root" />
+
+		<XmlHistogram name="hModvsEta" url="MtdGeomMap.root" />
+		<XmlHistogram name="hBLvsPhi" url="MtdGeomMap.root" />
+
+	</JPsiEfficiency>
+
+
+	<bins>
+		<mass width="0.01" min="0" max="4" />
+		<pt width="0.1" min="0" max="10" /> 
+		<eta width="0.05" min="-5.8" max="5.8" />
+		<phi width="0.05" min="-3.8" max="3.8" />
+		<w width="0.01" min="0" max="1.5" />
+	</bins>
+</config>

@@ -10,6 +10,7 @@ using namespace jdb;
 #include <exception>
 
 #include "ToyMaker/ToyEffMaker.h"
+#include "JPsiEfficiency.h"
 
 
 #define LOGURU_IMPLEMENTATION 1
@@ -22,6 +23,7 @@ int main( int argc, char* argv[] ) {
 
 	
 	TaskFactory::registerTaskRunner<ToyEffMaker>( "ToyEffMaker" );
+	TaskFactory::registerTaskRunner<JPsiEfficiency>( "JPsiEfficiency" );
 	
 
 	TaskEngine engine( argc, argv, "ToyEffMaker" );
