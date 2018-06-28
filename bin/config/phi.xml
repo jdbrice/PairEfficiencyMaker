@@ -27,7 +27,7 @@
 		</input>
 
 		<output>
-			<TFile url="eff-table-phi-{jobIndex}.root" />
+			<TFile url="out/eff-table-phi-{jobIndex}.root" />
 		</output>
 
 		<histograms>
