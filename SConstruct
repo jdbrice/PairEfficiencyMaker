@@ -18,6 +18,8 @@ env.Append(LIBS       = [ "TMVA", "libRooBarbCore.a", "libRooBarbConfig.a", "lib
 debug = ARGUMENTS.get('debug', 0)
 if int(debug):
 	env.Append(CXXFLAGS = '-g')
+else:
+	env.Append(CXXFLAGS = '-O3')
 
 # # ROOT
 ROOTCFLAGS      = subprocess.check_output( ['root-config',  '--cflags'] ).rstrip().split( " " )

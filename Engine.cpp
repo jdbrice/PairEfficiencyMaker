@@ -11,6 +11,7 @@ using namespace jdb;
 
 #include "ToyMaker/ToyEffMaker.h"
 #include "JPsiEfficiency.h"
+#include "PhiEfficiency.h"
 
 
 #define LOGURU_IMPLEMENTATION 1
@@ -24,6 +25,7 @@ int main( int argc, char* argv[] ) {
 	
 	TaskFactory::registerTaskRunner<ToyEffMaker>( "ToyEffMaker" );
 	TaskFactory::registerTaskRunner<JPsiEfficiency>( "JPsiEfficiency" );
+	TaskFactory::registerTaskRunner<PhiEfficiency>( "PhiEfficiency" );
 	
 
 	TaskEngine engine( argc, argv, "ToyEffMaker" );

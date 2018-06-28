@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-	<Task name="JPsiEfficiency" type="JPsiEfficiency" config="" nodePath="JPsiEfficiency"  />
+	<Task name="PhiEfficiency" type="PhiEfficiency" config="" nodePath="PhiEfficiency"  />
 	<sys>pp</sys>
 	<mod></mod>
 	
@@ -21,13 +21,13 @@
 		<MtdResEff url="Run15ResponseEffViaPtTemplate.root" /> 
 	</p>
 
-	<JPsiEfficiency>
+	<PhiEfficiency>
 		<input>
 			<TFile url="test.root" />
 		</input>
 
 		<output>
-			<TFile url="eff-table-jpsi-{jobIndex}.root" />
+			<TFile url="eff-table-phi-{jobIndex}.root" />
 		</output>
 
 		<histograms>
@@ -87,7 +87,7 @@
 
 		</histograms>
 
-		<XmlHistogram name="TBW" url="JPsi_TBW.root" />
+		<XmlHistogram name="TBW" url="Phi_TBW.root" />
 
 		<XmlHistogram name="mc_5" url="{DIMUON_ROOT}/data/Efficiency/eff-{sys}.root" />
 		<XmlHistogram name="mc_6" url="{DIMUON_ROOT}/data/Efficiency/eff-{sys}.root" />
@@ -100,7 +100,7 @@
 		<XmlHistogram name="hModvsEta" url="MtdGeomMap.root" />
 		<XmlHistogram name="hBLvsPhi" url="MtdGeomMap.root" />
 
-	</JPsiEfficiency>
+	</PhiEfficiency>
 
 
 	<bins>

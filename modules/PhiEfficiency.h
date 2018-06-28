@@ -1,5 +1,5 @@
-#ifndef JPSI_EFFICIENCY_H
-#define JPSI_EFFICIENCY_H
+#ifndef PHI_EFFICIENCY_H
+#define PHI_EFFICIENCY_H
 
 #include "HistoAnalyzer.h"
 #include "XmlFunction.h"
@@ -17,25 +17,12 @@
 
 #include <stdlib.h>
 
-const double JPSI_MASS = 3.096916;
-
-template <>
-TString XmlConfig::get<TString>( string path ) const {
-	TString r( getString( path ) );
-	return r;
-}
-
-template <>
-TString XmlConfig::get<TString>( string path, TString dv ) const {
-	if ( !exists( path ) )
-		return dv;
-	TString r( getString( path ) );
-	return r;
-}
+const double PHI_MASS = 1.019455;
 
 
 
-class JPsiEfficiency : public HistoAnalyzer {
+
+class PhiEfficiency : public HistoAnalyzer {
 protected:
 	XmlFunction xfPtResolution, xfPhi;
 	size_t N = 0;
@@ -92,8 +79,8 @@ protected:
 
 public:
 
-	JPsiEfficiency() {}
-	~JPsiEfficiency() {}
+	PhiEfficiency() {}
+	~PhiEfficiency() {}
 
 	virtual void initialize(){
 		HistoAnalyzer::initialize();
@@ -178,28 +165,28 @@ public:
 		xtbw.load( config, config.q( nodePath + ".XmlHistogram{name==TBW}" ) );
 		htbw = xtbw.getTH1();
 
-		double jpsiM =  JPSI_MASS;
-		double jpsiW = 9.29e-5;
+		double phiM =  PHI_MASS;
+		double phiW = 4.26e-3;
 
 		
 		
 
-		massDistribution = shared_ptr<TF1>( new TF1( "jpsi_mass", BreitWigner, 0, 10, 2 ) );
+		massDistribution = shared_ptr<TF1>( new TF1( "phi_mass", BreitWigner, 0, 10, 2 ) );
 
 		// Set the BreitWigner to use the width and mass of this plc
-		massDistribution->SetParameter( 0, jpsiW );
-		massDistribution->SetParameter( 1, jpsiM );
+		massDistribution->SetParameter( 0, phiW );
+		massDistribution->SetParameter( 1, phiM );
 
-		massDistribution->SetRange( jpsiM - 100 * jpsiW, jpsiM + 100 * jpsiW ); // TODO: make configurable
+		massDistribution->SetRange( phiM - 100 * phiW, phiM + 100 * phiW ); // TODO: make configurable
 		// absurdly high resolution ( < 1 MeV/bin) but it only needs to compute CDF once since these should be true 1D functions
 		massDistribution->SetNpx(500);
 
 
-		ceres = shared_ptr<TF1>( new TF1( "jpsi_y", "pow(cosh(3*x/4./sqrt(log([0]/2./[1]))/(1-pow(x,2)/2./[0]*[2])),-2.)" ) );
+		ceres = shared_ptr<TF1>( new TF1( "phi_y", "pow(cosh(3*x/4./sqrt(log([0]/2./[1]))/(1-pow(x,2)/2./[0]*[2])),-2.)" ) );
 		// p0 = sqrt_s
 		// p1 = nucleon mass
 		// p2 = hadron mass
-		ceres->SetParameters( 200, 0.938, jpsiM);
+		ceres->SetParameters( 200, 0.938, phiM);
 		ceres->SetRange( -1, 1 );
 
 
@@ -207,7 +194,7 @@ public:
 		LOG_F( INFO, "initialize MASS" );
 		double m   = massDistribution->GetRandom();
 		LOG_F( INFO, "initialize CERES" );
-		double eta = rapidityToEta( ceres->GetRandom(), 1.0, JPSI_MASS );
+		double eta = rapidityToEta( ceres->GetRandom(), 1.0, PHI_MASS );
 		// should be flat
 		LOG_F( INFO, "initialize Phi" );
 		double phi = xfPhi.getTF1()->GetRandom();
@@ -218,17 +205,17 @@ public:
 		if( tbwMakeHisto ){
 			
 			LOG_F( INFO, "building TBW function, this is slow" );
-			tbw = shared_ptr<TF1>(  TsallisBlastWave( "jpsi_tbw", jpsiM, 0, 0.0964, 0, 1.0926, 40, -0.8, 0.8 )  );
+			tbw = shared_ptr<TF1>(  TsallisBlastWave( "phi_tbw", phiM, 0, 0.0964, 0, 1.0926, 40, -0.8, 0.8 )  );
 			// tbw->SetNpx(5000);
 			tbw->SetRange( 0, 15 );
 
 			assert( tbw );
 			LOG_F( INFO, "Makeing TBW Histo so we can speed up future runs" );
-			TFile *fTBW = new TFile( "JPsi_TBW.root", "RECREATE" );
+			TFile *fTBW = new TFile( "Phi_TBW.root", "RECREATE" );
 			TH1*h = new TH1F( "TBW", ";p_{T} (GeV/c); d^{2}N/2#pidp_{T}dp_{T}dy", 15000, 0, 15 );
-			for ( size_t ijpsi = 0; ijpsi < 1000000000; ijpsi++ ){
+			for ( size_t iphi = 0; iphi < 1000000000; iphi++ ){
 				h->Fill( tbw->GetRandom() );
-				if ( ijpsi % 1000000 == 0 ){
+				if ( iphi % 1000000 == 0 ){
 					cout << "." << std::flush;
 				}
 			}
@@ -292,7 +279,7 @@ public:
 			// Sample the parent's kinematics
 			double m   = massDistribution->GetRandom();
 			double pt  = htbw->GetRandom();
-			double eta = rapidityToEta( ceres->GetRandom(), pt, JPSI_MASS );
+			double eta = rapidityToEta( ceres->GetRandom(), pt, PHI_MASS );
 			// should be flat
 			double phi = xfPhi.getTF1()->GetRandom();
 			
@@ -300,7 +287,7 @@ public:
 
 			// Require parent to be flat in allowed rapidity range
 			while ( abs(lv.Rapidity() ) > 0.5 ){
-				eta = rapidityToEta( ceres->GetRandom(), pt, JPSI_MASS );
+				eta = rapidityToEta( ceres->GetRandom(), pt, PHI_MASS );
 				lv.SetPtEtaPhiM( pt, eta, phi, m );
 			}
 
