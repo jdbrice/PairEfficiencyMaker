@@ -97,8 +97,9 @@ public:
 		assert( xfPhi.getTF1() );
 		assert( xfPtResolution.getTF1() );
 
-		if ( 0 == 0 == config.get<int>( "jobIndex" ) )
+		if ( config.get<bool>( "p.writeResolution", false ) ){
 			xfPtResolution.getTF1()->Write();
+		}
 
 		N = config.get<size_t>( "N" );
 		LOG_F( INFO, "N=%lu", N );
@@ -428,7 +429,7 @@ public:
 
 		makeWithParentKinematics();
 
-		if ( 0 == config.get<int>( "jobIndex" ) || -1 == config.get<int>( "jobIndex" ) ){
+		if ( 0 == config.get<int>( "jobIndex", -2 ) || -1 == config.get<int>( "jobIndex", -2 ) ){
 			TNamed config_str( "config", config.toXml() );
 			config_str.Write();
 		}
