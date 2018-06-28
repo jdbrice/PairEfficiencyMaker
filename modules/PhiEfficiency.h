@@ -97,7 +97,8 @@ public:
 		assert( xfPhi.getTF1() );
 		assert( xfPtResolution.getTF1() );
 
-		xfPtResolution.getTF1()->Write();
+		if ( 0 == 0 == config.get<int>( "jobIndex" ) )
+			xfPtResolution.getTF1()->Write();
 
 		N = config.get<size_t>( "N" );
 		LOG_F( INFO, "N=%lu", N );
