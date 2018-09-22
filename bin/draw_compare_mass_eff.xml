@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+	
+	<Data name="d1" url="mass-eff-gammastar.root" />
+	<Data name="d2" url="mass-eff-cocktail.root" />
+	
+	<TCanvas w="1600" h="900" />
+	<Margins>0.05, 0.05, 0.15, 0.15</Margins>
+
+	<Plot>
+		<Axes logy="0" lsx="0, 4, 40" lsy="0, 100, 10" min="3e-3" max="0.12" lw="2" lc="#00F" title="" y-title="Total Efficiency" x-title="M_{#mu#mu} (GeV/c^{2})" title="" optstat="0" ytp="26" yto="0.8" xtp="24" xto="0.95" ylp="16" xlp="22" />
+		
+		<Histo name="d1/mtdr_over_mc" draw="same h" lw="2" lc="#005500" />
+		<Histo name="d1/mtdr_over_mc_rb" draw="same h" lw="2" lc="#005500" />
+
+		<Histo name="d2/mtdr_over_mc" draw="same h" lw="2" lc="#F00500" />
+		<Histo name="d2/mtdr_over_mc_rb" draw="same h" lw="2" lc="#F00500" />
+		
+
+		<TLine x="0, 10" y="1, 1" color="#000" />
+		<!-- <TLatex text="Toy MonteCarlo: J/#Psi (|y|<0.5)" x="0.4" y="0.96" font="42" point="16"/> -->
+
+		<Legend border-size="0" columns="2" >
+			<Position pos="top hcenter" h="0.15" padding="0.01, 0.05, 0.05, 0" w="0.6"/>
+			<Entry name="d1/mtdr_over_mc" title="Virtual photon"  />
+			<Entry name="d2/mtdr_over_mc" title="Cocktail"  />
+
+		</Legend>
+
+		<Export url="mass-compare-eff.pdf" />
+	</Plot>
+
+</config>

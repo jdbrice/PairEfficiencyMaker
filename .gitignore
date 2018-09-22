@@ -4,3 +4,6 @@
 *.pdf
 *.png
 *.app
+.DS_Store
+bin/JPsi_TBW.root
+bin/lldb_shim.sh

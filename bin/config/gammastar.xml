@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-	<Task name="PhiEfficiency" type="PhiEfficiency" config="" nodePath="PhiEfficiency"  />
+	<Task name="VirtualPhotonEfficiency" type="VirtualPhotonEfficiency" config="" nodePath="VirtualPhotonEfficiency"  />
 	<sys>pp</sys>
 	<mod></mod>
 	
@@ -12,7 +12,6 @@
 	</dist>
 
 	<p>
-		<tbwMakeHisto>false</tbwMakeHisto>
 		<daughter>
 			<Range name="pt" min="1.1" max="100000" />
 			<Range name="eta" min="-0.5" max="0.5" />
@@ -21,13 +20,13 @@
 		<MtdResEff url="Run15ResponseEffViaPtTemplate.root" /> 
 	</p>
 
-	<PhiEfficiency>
+	<VirtualPhotonEfficiency>
 		<input>
 			<TFile url="test.root" />
 		</input>
 
 		<output>
-			<TFile url="out/eff-table-phi-1p3-{jobIndex}.root" />
+			<TFile url="eff-table-gammastar-{jobIndex}.root" />
 		</output>
 
 		<histograms>
@@ -36,6 +35,7 @@
 			<Histo name="hmc" xtitle="M_{#mu#mu} (GeV/c^{2})" ytitle="p_{T}^{#mu#mu} (GeV/c)" bins_x="bins.mass" bins_y="bins.pt" />
 			<Histo name="hrc" xtitle="M_{#mu#mu} (GeV/c^{2})" ytitle="p_{T}^{#mu#mu} (GeV/c)" bins_x="bins.mass" bins_y="bins.pt" />
 			<Histo name="hmtd" xtitle="M_{#mu#mu} (GeV/c^{2})" ytitle="p_{T}^{#mu#mu} (GeV/c)" bins_x="bins.mass" bins_y="bins.pt" />
+			<Histo name="hmtdr" xtitle="M_{#mu#mu} (GeV/c^{2})" ytitle="p_{T}^{#mu#mu} (GeV/c)" bins_x="bins.mass" bins_y="bins.pt" />
 
 			<!-- Daughter kinematics at MC level (no weighting) -->
 			<Histo name="dmc_pt" bins_x="bins.pt" title="MC;p_{T} (GeV/c); dN/dp_{T} (GeV/c)^{-1}" lc="#F00" />
@@ -87,7 +87,7 @@
 
 		</histograms>
 
-		<XmlHistogram name="TBW" url="Phi_TBW.root" />
+		<XmlHistogram name="psi_dNdPt" url="TBWsEval.root" />
 
 		<XmlHistogram name="mc_5" url="{DIMUON_ROOT}/data/Efficiency/eff-{sys}.root" />
 		<XmlHistogram name="mc_6" url="{DIMUON_ROOT}/data/Efficiency/eff-{sys}.root" />
@@ -100,7 +100,7 @@
 		<XmlHistogram name="hModvsEta" url="MtdGeomMap.root" />
 		<XmlHistogram name="hBLvsPhi" url="MtdGeomMap.root" />
 
-	</PhiEfficiency>
+	</VirtualPhotonEfficiency>
 
 
 	<bins>

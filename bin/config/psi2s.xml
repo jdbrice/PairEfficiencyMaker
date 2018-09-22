@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-	<Task name="PhiEfficiency" type="PhiEfficiency" config="" nodePath="PhiEfficiency"  />
+	<Task name="Psi2SEfficiency" type="Psi2SEfficiency" config="" nodePath="Psi2SEfficiency"  />
 	<sys>pp</sys>
 	<mod></mod>
 	
-	<N>50000000</N>
+	<N>5000000</N>
 
 	<dist>
 		<TF1 name="Phi" formula=" 1 * ( x >= -TMath::Pi() && x <= TMath::Pi() )" min="-3.5" max="3.5" />
@@ -12,7 +12,6 @@
 	</dist>
 
 	<p>
-		<tbwMakeHisto>false</tbwMakeHisto>
 		<daughter>
 			<Range name="pt" min="1.1" max="100000" />
 			<Range name="eta" min="-0.5" max="0.5" />
@@ -21,13 +20,13 @@
 		<MtdResEff url="Run15ResponseEffViaPtTemplate.root" /> 
 	</p>
 
-	<PhiEfficiency>
+	<Psi2SEfficiency>
 		<input>
 			<TFile url="test.root" />
 		</input>
 
 		<output>
-			<TFile url="out/eff-table-phi-1p3-{jobIndex}.root" />
+			<TFile url="eff-table-psi2s-{jobIndex}.root" />
 		</output>
 
 		<histograms>
@@ -87,7 +86,7 @@
 
 		</histograms>
 
-		<XmlHistogram name="TBW" url="Phi_TBW.root" />
+		<XmlHistogram name="psi_dNdPt" url="TBWsEval.root" />
 
 		<XmlHistogram name="mc_5" url="{DIMUON_ROOT}/data/Efficiency/eff-{sys}.root" />
 		<XmlHistogram name="mc_6" url="{DIMUON_ROOT}/data/Efficiency/eff-{sys}.root" />
@@ -100,7 +99,7 @@
 		<XmlHistogram name="hModvsEta" url="MtdGeomMap.root" />
 		<XmlHistogram name="hBLvsPhi" url="MtdGeomMap.root" />
 
-	</PhiEfficiency>
+	</Psi2SEfficiency>
 
 
 	<bins>

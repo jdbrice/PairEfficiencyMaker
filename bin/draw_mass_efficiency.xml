@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+
+	<input>gammastar</input>
+	<Data name="d" url="eff-table-all-{input}.root" />
+	<TFile url="mass-eff-{input}.root" />
+
+	<TCanvas w="1600" h="900" />
+	<Margins>0.05, 0.05, 0.15, 0.15</Margins>
+
+	<Loop var="hn" states="mtdr, mtd, rc, mc" >
+		<Transform>
+			<Projection axis="x" save_as="{hn}_mass" name="h{hn}" />
+		</Transform>
+	</Loop>
+
+	<Loop var="num" states="mtdr, mtd, rc, mc">
+		<Loop var="den" states=" mc, rc, mtd" >
+			<Transform>
+				<Divide save_as="{num}_over_{den}" nameA="{num}_mass" nameB="{den}_mass" />
+			</Transform>
+		</Loop>
+	</Loop>
+
+	<Transform>
+		<Rebin save_as="mtdr_rb" name="mtdr_mass" bins_x="mass-sig" />
+		<Rebin save_as="mc_rb" name="mc_mass" bins_x="mass-sig" />
+
+		<Divide save_as="mtdr_over_mc_rb" nameA="mtdr_rb" nameB="mc_rb" />
+	</Transform>
+
+	<Plot>
+
+		<Histo name="rc_over_mc" draw="h" logy="1" min="3e-3" max="2" lw="2" lc="#00F" title="" y-title="Efficiency" x-title="M_{#mu#mu} (GeV/c^{2})" title="" optstat="0" ytp="26" yto="0.8" xtp="24" xto="0.95" ylp="16"/>
+		<!-- <Histo name="mc_over_gen" draw="same h" lw="2" lc="#000"  /> -->
+ 		<Histo name="mtd_over_rc" draw="same h" lw="2" lc="#F00" />
+		<Histo name="mtdr_over_mtd" draw="same h" lw="2" lc="#500" />
+
+		<Histo name="mtdr_over_mc" draw="same h" lw="2" lc="#005500" />
+		<Histo name="mtdr_over_mc_rb" draw="same h" lw="2" lc="#005500" />
+		
+
+		<TLine x="0, 10" y="1, 1" color="#000" />
+		<!-- <TLatex text="Toy MonteCarlo: J/#Psi (|y|<0.5)" x="0.4" y="0.96" font="42" point="16"/> -->
+
+		<Legend border-size="0" columns="2" >
+			<Position pos="bottom right" h="0.15" padding="0, 0.05, 0.05, 0" w="0.6"/>
+
+			<!-- <Entry name="mc_over_mc" title="#splitline{ Kinematic Acceptance }{ |#eta^{#mu}|<0.5, p_{T}^{#mu}>1.1(GeV/c) }"  /> -->
+			<Entry name="rc_over_mc" title="TPC reco / MC"  />
+			<Entry name="mtd_over_rc" title="MTD Match / TPC reco"  />
+			<Entry name="mtdr_over_mtd" title="#varepsilon MTD Response "  />
+			<Entry name="mtdr_over_mc" title="Total Efficiency"  />
+
+		</Legend>
+
+		<Export url="mass-eff.pdf" />
+	</Plot>
+
+	<mass-sig>0.0, 0.21, 0.25, 0.3, 0.4,0.5, 0.53, 0.56, 0.6, 0.65,  0.72, 0.74, 0.75, 0.77, 0.780, 0.79, 0.8, 0.82, 0.86,  0.9, 0.94, 0.98, 1.0, 1.01, 1.03, 1.04, 1.1, 1.2, 1.75, 2.0, 2.25, 2.5, 2.75, 2.9, 3.0, 3.04, 3.08, 3.12, 3.16, 3.2, 3.24, 3.4, 3.5, 3.6, 3.65, 3.7, 3.75, 3.8, 3.9, 4.0, 4.5, 5.0, 5.5, 6.0</mass-sig>
+</config>

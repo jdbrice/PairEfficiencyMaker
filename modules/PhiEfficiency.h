@@ -518,6 +518,15 @@ public:
 		} else {
 			// LOG_F( INFO,  "r=%f @ pt=%f, iBL=%d, iMod=%d", r, pt, iBL, iMod);
 		}
+
+		if ( pt < 1.3 ){
+			r *= 500;
+			if ( r > 1.0)
+				r = 1.0;
+		} else {
+			r *= 1.05;
+		}
+
 		return r;
 	}
 

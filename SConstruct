@@ -22,8 +22,8 @@ else:
 	env.Append(CXXFLAGS = '-O3')
 
 # # ROOT
-ROOTCFLAGS      = subprocess.check_output( ['root-config',  '--cflags'] ).rstrip().split( " " )
-ROOTLIBS        = subprocess.check_output( ["root-config",  "--libs"] )
+ROOTCFLAGS      = subprocess.check_output( ['root-config',  '--cflags'] ).rstrip().decode( 'utf-8' ).split( " " )
+ROOTLIBS        = subprocess.check_output( ["root-config",  "--libs"] ).decode( 'utf-8' )
 ROOT_SYS        = os.environ.get( "ROOTSYS", "" )
 
 env.Append(CPPPATH   = [ ROOT_SYS + "/include/", JDB_LIB + "/include", "modules/lib" ])

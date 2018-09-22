@@ -11,7 +11,11 @@ using namespace jdb;
 
 #include "ToyMaker/ToyEffMaker.h"
 #include "JPsiEfficiency.h"
+#include "Psi2SEfficiency.h"
 #include "PhiEfficiency.h"
+
+#include "CocktailLikeEfficiency.h"
+#include "VirtualPhotonEfficiency.h"
 
 
 #define LOGURU_IMPLEMENTATION 1
@@ -25,7 +29,11 @@ int main( int argc, char* argv[] ) {
 	
 	TaskFactory::registerTaskRunner<ToyEffMaker>( "ToyEffMaker" );
 	TaskFactory::registerTaskRunner<JPsiEfficiency>( "JPsiEfficiency" );
+	TaskFactory::registerTaskRunner<Psi2SEfficiency>( "Psi2SEfficiency" );
 	TaskFactory::registerTaskRunner<PhiEfficiency>( "PhiEfficiency" );
+
+	TaskFactory::registerTaskRunner<CocktailLikeEfficiency>( "CocktailLikeEfficiency" );
+	TaskFactory::registerTaskRunner<VirtualPhotonEfficiency>( "VirtualPhotonEfficiency" );
 	
 
 	TaskEngine engine( argc, argv, "ToyEffMaker" );

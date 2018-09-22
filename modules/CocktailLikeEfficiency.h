@@ -1,5 +1,5 @@
-#ifndef JPSI_EFFICIENCY_H
-#define JPSI_EFFICIENCY_H
+#ifndef COCKTAIL_LIKE_EFFICIENCY_H
+#define COCKTAIL_LIKE_EFFICIENCY_H
 
 #include "HistoAnalyzer.h"
 #include "XmlFunction.h"
@@ -17,25 +17,25 @@
 
 #include <stdlib.h>
 
-const double JPSI_MASS = 3.096916;
+// const double PSI_MASS = 3.686097;
 
-template <>
-TString XmlConfig::get<TString>( string path ) const {
-	TString r( getString( path ) );
-	return r;
-}
+// template <>
+// TString XmlConfig::get<TString>( string path ) const {
+// 	TString r( getString( path ) );
+// 	return r;
+// }
 
-template <>
-TString XmlConfig::get<TString>( string path, TString dv ) const {
-	if ( !exists( path ) )
-		return dv;
-	TString r( getString( path ) );
-	return r;
-}
+// template <>
+// TString XmlConfig::get<TString>( string path, TString dv ) const {
+// 	if ( !exists( path ) )
+// 		return dv;
+// 	TString r( getString( path ) );
+// 	return r;
+// }
 
 
 
-class JPsiEfficiency : public HistoAnalyzer {
+class CocktailLikeEfficiency : public HistoAnalyzer {
 protected:
 	XmlFunction xfPtResolution, xfPhi;
 	size_t N = 0;
@@ -92,8 +92,8 @@ protected:
 
 public:
 
-	JPsiEfficiency() {}
-	~JPsiEfficiency() {}
+	CocktailLikeEfficiency() {}
+	~CocktailLikeEfficiency() {}
 
 	virtual void initialize(){
 		HistoAnalyzer::initialize();
@@ -175,22 +175,22 @@ public:
 		}
 
 
-		xtbw.load( config, config.q( nodePath + ".XmlHistogram{name==TBW}" ) );
+		xtbw.load( config, config.q( nodePath + ".XmlHistogram{name==psi_dNdPt}" ) );
 		htbw = xtbw.getTH1();
 
-		double jpsiM =  JPSI_MASS;
-		double jpsiW = 9.29e-5;
+		// double jpsiM =  PSI_MASS;
+		// double jpsiW = 3.04e-4;
 
 		
 		
 
-		massDistribution = shared_ptr<TF1>( new TF1( "jpsi_mass", BreitWigner, 0, 10, 2 ) );
+		massDistribution = shared_ptr<TF1>( new TF1( "virtualphotn_mass", "1*(0.210 < x < 5.0)" , 0, 5 ) );
 
 		// Set the BreitWigner to use the width and mass of this plc
-		massDistribution->SetParameter( 0, jpsiW );
-		massDistribution->SetParameter( 1, jpsiM );
+		// massDistribution->SetParameter( 0, jpsiW );
+		// massDistribution->SetParameter( 1, jpsiM );
 
-		massDistribution->SetRange( jpsiM - 100 * jpsiW, jpsiM + 100 * jpsiW ); // TODO: make configurable
+		massDistribution->SetRange( 0.210, 2 ); // TODO: make configurable
 		// absurdly high resolution ( < 1 MeV/bin) but it only needs to compute CDF once since these should be true 1D functions
 		massDistribution->SetNpx(500);
 
@@ -199,7 +199,7 @@ public:
 		// p0 = sqrt_s
 		// p1 = nucleon mass
 		// p2 = hadron mass
-		ceres->SetParameters( 200, 0.938, jpsiM);
+		ceres->SetParameters( 200, 0.938, 1.5);
 		ceres->SetRange( -1, 1 );
 
 
@@ -207,36 +207,11 @@ public:
 		LOG_F( INFO, "initialize MASS" );
 		double m   = massDistribution->GetRandom();
 		LOG_F( INFO, "initialize CERES" );
-		double eta = rapidityToEta( ceres->GetRandom(), 1.0, JPSI_MASS );
+		double eta = rapidityToEta( ceres->GetRandom(), 1.0, 3.0 );
 		// should be flat
 		LOG_F( INFO, "initialize Phi" );
 		double phi = xfPhi.getTF1()->GetRandom();
 
-
-		bool tbwMakeHisto = config.get<bool>( "p.tbwMakeHisto", true );
-
-		if( tbwMakeHisto ){
-			
-			LOG_F( INFO, "building TBW function, this is slow" );
-			tbw = shared_ptr<TF1>(  TsallisBlastWave( "jpsi_tbw", jpsiM, 0, 0.0964, 0, 1.0926, 40, -0.8, 0.8 )  );
-			// tbw->SetNpx(5000);
-			tbw->SetRange( 0, 15 );
-
-			assert( tbw );
-			LOG_F( INFO, "Makeing TBW Histo so we can speed up future runs" );
-			TFile *fTBW = new TFile( "JPsi_TBW.root", "RECREATE" );
-			TH1*h = new TH1F( "TBW", ";p_{T} (GeV/c); d^{2}N/2#pidp_{T}dp_{T}dy", 15000, 0, 15 );
-			for ( size_t ijpsi = 0; ijpsi < 1000000000; ijpsi++ ){
-				h->Fill( tbw->GetRandom() );
-				if ( ijpsi % 1000000 == 0 ){
-					cout << "." << std::flush;
-				}
-			}
-			cout << endl; 
-
-			fTBW->Write();
-			exit(0);
-		}
 
 		// load the MTD response Eff tables
 		TFile *fMtdResEff = new TFile( config.get<TString>( "p.MtdResEff:url", "Run15ResponseEffViaPtTemplate.root" ) );
@@ -286,13 +261,16 @@ public:
 		size_t nPass = 0;
 		size_t nAttempt = 0;
 
+		assert( htbw && "why!");
+		// LOG_F( INFO, "hmm" );
+
 		while ( nPass < N ){
 			nAttempt++;
 			
 			// Sample the parent's kinematics
 			double m   = massDistribution->GetRandom();
 			double pt  = htbw->GetRandom();
-			double eta = rapidityToEta( ceres->GetRandom(), pt, JPSI_MASS );
+			double eta = rapidityToEta( ceres->GetRandom(), pt, m );
 			// should be flat
 			double phi = xfPhi.getTF1()->GetRandom();
 			
@@ -300,7 +278,7 @@ public:
 
 			// Require parent to be flat in allowed rapidity range
 			while ( abs(lv.Rapidity() ) > 0.5 ){
-				eta = rapidityToEta( ceres->GetRandom(), pt, JPSI_MASS );
+				eta = rapidityToEta( ceres->GetRandom(), pt, m );
 				lv.SetPtEtaPhiM( pt, eta, phi, m );
 			}
 
@@ -421,6 +399,7 @@ public:
 
 
 			eff *= emtdRes1 * emtdRes2;
+			book->fill( "hmtdr", rclv.M(), rclv.Pt(), eff );
 			book->fill( "mtdr_pt", rclv.Pt(), eff );
 			book->fill( "mtdr_eta", rclv.PseudoRapidity(), eff );
 			book->fill( "mtdr_rap", rclv.Rapidity(), eff );
@@ -529,12 +508,6 @@ public:
 		} else {
 			// LOG_F( INFO,  "r=%f @ pt=%f, iBL=%d, iMod=%d", r, pt, iBL, iMod);
 		}
-
-		// if ( pt < 1.3 ){
-		// 	r *= 0.01;
-		// }
-
-
 		return r;
 	}
 
